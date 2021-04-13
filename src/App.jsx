@@ -18,17 +18,33 @@ class App extends Component {
     filter: '',
   };
 
-  onFormSubmit = data => {
-    const isDuplicateNumber = this.state.contacts.find(
-      ({ number }) => number === data.number,
-    );
-    if (isDuplicateNumber) {
-      alert('This number is already in contacts.');
+  onFormSubmit = contactData => {
+    const checkDuplicateContacts = contact => {
+      const isDuplicateNumber = this.state.contacts.find(
+        ({ number }) => number === contact.number,
+      );
+      const isDuplicateName = this.state.contacts.find(
+        ({ name }) => name.toLowerCase() === contact.name.toLowerCase(),
+      );
+
+      if (isDuplicateNumber) {
+        alert('This number is already in contacts.');
+        return true;
+      }
+
+      if (isDuplicateName) {
+        alert(`${isDuplicateName.name} is already in contacts.`);
+        return true;
+      }
+    };
+
+    if (checkDuplicateContacts(contactData)) {
       return;
     }
-    data.id = uuidv4();
+
+    contactData.id = uuidv4();
     this.setState(prevState => ({
-      contacts: [data, ...prevState.contacts],
+      contacts: [contactData, ...prevState.contacts],
     }));
   };
 
